@@ -1,0 +1,36 @@
+{
+    "access_log": "/dev/stdout",
+    "listeners": {
+        "*:80": {
+            "pass": "routes"
+        }
+    },
+    "routes": [
+        {
+            "match": {
+                "uri": "/api/*"
+            },
+            "action": {
+                "pass": "applications/backend"
+            }
+        },
+        {
+            "action": {
+                "share": "/app/frontend$uri",
+                "fallback": {
+                    "share": "/app/frontend/index.html"
+                }
+            }
+        }
+    ],
+    "applications": {
+      "backend": {
+          "type": "python3",
+          "path": "/app/backend",
+          "home": "/app/backend/.venv",
+          "module": "app",
+          "callable": "app",
+          "protocol": "asgi"
+      }  
+    }
+}
