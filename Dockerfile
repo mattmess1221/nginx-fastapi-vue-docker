@@ -8,7 +8,7 @@ ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 
 COPY backend/pyproject.toml backend/poetry.lock ./
 RUN poetry install --no-dev
-COPY backend/app.py app.py
+COPY backend/app/ app/
 
 
 FROM node:lts as build-frontend

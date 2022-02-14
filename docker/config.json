@@ -24,13 +24,13 @@
         }
     ],
     "applications": {
-      "backend": {
-          "type": "python3",
-          "path": "/app/backend",
-          "home": "/app/backend/.venv",
-          "module": "app",
-          "callable": "app",
-          "protocol": "asgi"
-      }  
+        "backend": {
+            "type": "python3",
+            "path": "/app/backend",
+            "home": "/app/backend/.venv",
+            "module": "app",
+            "callable": "app",
+            "protocol": "asgi"
+        }
     }
 }
