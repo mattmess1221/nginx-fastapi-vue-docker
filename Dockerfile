@@ -1,17 +1,17 @@
 FROM python:3.9 as build-backend
 
 RUN pip install -U pip setuptools wheel && \
-    pip install poetry
+    pip install poetry==1.6.1
 
 WORKDIR /app/backend
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 
 COPY backend/pyproject.toml backend/poetry.lock ./
-RUN poetry install --no-dev
 COPY backend/app/ app/
+RUN poetry install --only main
 
 
-FROM node:lts as build-frontend
+FROM node:16.20.2-alpine3.18 as build-frontend
 
 WORKDIR /app/frontend
 
