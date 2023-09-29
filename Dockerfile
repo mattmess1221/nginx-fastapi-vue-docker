@@ -1,30 +1,39 @@
-FROM python:3.9 as build-backend
+FROM docker.io/python:3.11 as build-backend
 
-RUN pip install -U pip setuptools wheel && \
-    pip install poetry
+ENV PIP_NO_CACHE_DIR=1 \
+    PIP_ROOT_USER_ACTION=ignore \
+    POETRY_VIRTUALENVS_IN_PROJECT=true
+
+RUN pip install -U pip setuptools wheel -q && \
+    pip install poetry==1.6.1 -q
 
 WORKDIR /app/backend
-ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 
 COPY backend/pyproject.toml backend/poetry.lock ./
-RUN poetry install --no-dev
+RUN poetry install --only main --no-root --sync --no-cache
 COPY backend/app/ app/
 
 
-FROM node:lts as build-frontend
+FROM docker.io/node:18 as build-frontend
+
+ENV npm_config_update_notifier=false
+
+RUN corepack enable
 
 WORKDIR /app/frontend
 
-COPY frontend/package.json frontend/*.config.js frontend/yarn.lock ./
-RUN yarn install
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+RUN pnpm fetch
 
+COPY frontend/*.config.js frontend/index.html ./
 COPY frontend/src src/
 COPY frontend/public public/
 
-RUN yarn build
+RUN pnpm install
+RUN pnpm build
 
 
-FROM nginx/unit:1.26.1-python3.9
+FROM docker.io/nginx/unit:1.29.1-python3.11
 
 WORKDIR /app
 
@@ -32,4 +41,3 @@ COPY --from=build-backend /app/backend backend
 COPY --from=build-frontend /app/frontend/dist frontend
 
 COPY docker/config.json /docker-entrypoint.d/config.json
-

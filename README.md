@@ -15,17 +15,16 @@ using the FastAPI framework. Use the following commands to start developing.
 ```shell
 cd backend
 poetry install
-poetry shell
-uvicorn app:app --debug --reload
+poetry run uvicorn app:app --debug --reload
 ```
 
-The `frontend` folder contains a [Yarn](https://yarnpkg.com/) project using the
+The `frontend` folder contains a [Pnpm](https://pnpm.io/) project using the
 Vue.js framework. Use the following commands to start developing.
 
 ```shell
 cd frontend
-yarn install
-yarn serve
+pnpm install
+pnpm dev
 ```
 
 After both the frontend and backend are up, you can visit http://localhost:8080/ to
